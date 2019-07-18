@@ -1,0 +1,21 @@
+function yum_repo() {
+	yum -y install createrepo nginx expect > /dev/null
+	mkdir -p /srv/salt-yum
+	sed -i 's#keepcache=0#keepcache=1#g' /etc/yum.conf 
+        sed -i "s#IP#$IP#g"  /srv/salt/conf/salt.repo
+	createrepo /srv/salt-yum
+        find /var/cache/yum -type f -name "*.rpm" |xargs -i cp {} /srv/salt-yum/
+	createrepo -pdo /srv/salt-yum /srv/salt-yum
+        createrepo --update /srv/salt-yum
+	egrep -v "^$|#" /etc/nginx/nginx.conf.default > /etc/nginx/nginx.conf
+	sed -i 's#80#1991#g' /etc/nginx/nginx.conf
+	if [ -z `netstat -ntlp|grep -o 1991` ]
+	  then
+	    /usr/sbin/nginx
+	  else
+	    echo '1991 is used'
+	fi
+}
+function centos_v() {
+	[ -z /usr/bin/systemctl ] && /etc/init.d/$1 $2|| systemctl $2 $1
+}

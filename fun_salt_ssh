@@ -1,0 +1,27 @@
+#!/bin/bash
+function config_salt_ssh() {
+BASE_DIR=`pwd`
+[ ! -f $BASE_DIR/ip_list ] && echo "本级目录创建：ip_list 文件，格式同hosts文件" && exit 0
+num=(`cat $BASE_DIR/ip_list|awk '{print $1}'`)
+read -p 'pls input passwd: ' PASSWD
+echo ${num[*]}
+> /etc/salt/roster
+for ((i=0; i<${#num[*]}; i++))
+  do
+    IP=`echo ${num["$N"]}`
+    echo $i
+    echo "node$i:" >> /etc/salt/roster 
+    echo "  host: ${num[$i]}" >> /etc/salt/roster 
+    echo "  user: root" >> /etc/salt/roster 
+    echo "  passwd: $PASSWD" >> /etc/salt/roster 
+    echo "  sudo: True" >> /etc/salt/roster 
+done    
+}
+
+#function salt-ssh_exist() {
+
+
+
+
+
+
