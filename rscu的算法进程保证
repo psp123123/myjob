@@ -1,0 +1,31 @@
+#/bin/bash
+
+##################docker status###############################
+DATE=`date`
+
+docker_pid_count=`ps -ef|grep docker|grep -v grep|awk '{print $2}'|wc -l`
+#echo ">>>" $DATE ">>>" $docker_pid_count
+
+if [[ $docker_pid_count -lt 4 ]]
+  then
+    /home/work/ote/node/docker_ubuntu/bin/control start
+    sleep 10
+    echo ">>> start_docker ..." 
+  else
+    echo "$DATE >>>>>>>>>>>>>> dockerd is running..."
+
+fi
+#################container status############################
+DATE2=`date`
+docker_count=`/home/work/ote/node/docker_ubuntu/bin/docker ps |wc -l` 
+contaioner_pid=`/home/work/ote/node/docker_ubuntu/bin/docker ps -a |awk 'NR==2 {print $1}'`
+if [[ $docker_count -eq 1 ]]
+  then
+    echo ">>>>> container id is : " $docker_pid
+    echo ">>> $DATE2 " 'start container...'
+    #/home/work/ote/node/docker_ubuntu/bin/docker start $contaioner_pid >> /tmp/docker_start.log
+    /home/work/ote/node/docker_ubuntu/bin/docker start $contaioner_pid
+  else
+    echo "$DATE2 >>>>>>>>>>>>>> container is exist"
+fi
+
